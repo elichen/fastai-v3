@@ -1,9 +1,10 @@
 # Starter for deploying [fast.ai](https://www.fast.ai) models on Heroku
 
 ~~~~
-docker image build -t <app-name> .
-docker run --rm -it -p 80:8008 <app-name>
-heroku container:push web -a <app-name>
-heroku container:release web -a <app-name>
-heroku open -a <app-name>
+export APPNAME="street-signs"
+docker image build -t $APPNAME:latest .
+docker run --rm -it -p 80:8008 $APPNAME:latest
+heroku container:push web -a $APPNAME
+heroku container:release web -a $APPNAME
+heroku open -a $APPNAME
 ~~~~
