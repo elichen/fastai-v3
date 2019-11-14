@@ -46,13 +46,14 @@ async def analyze(request):
     img_data = await request.form()
     img_bytes = await (img_data['file'].read())
     img = open_image(BytesIO(img_bytes))
-    prediction,_,outputs = learn.predict(img)
-    formatted_outputs = ["{:.1f}%".format(value) for value in [x * 100 for x in torch.nn.functional.softmax(outputs, dim=0)]]
+    prediction,_,outputs = learn.predict(img, thresh=0.95)
+    formatted_outputs = ["{:.1f}%".format(value) for value in [x * 100 for x in outputs]]
     pred_probs = sorted(
             zip(learn.data.classes, map(str, formatted_outputs)),
             key=lambda p: p[1],
             reverse=True
         )
+    if len(prediction.obj) == 0: prediction = "Unknown"
     return JSONResponse({'prediction': str(prediction), 'details': str(pred_probs)})
 
 
